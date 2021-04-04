@@ -74,7 +74,7 @@ vector<int> LinuxParser::Pids() {
 
 // DONE: Read and return the system memory utilization
 float LinuxParser::MemoryUtilization() { 
-  return stof(parseMultiLine("MemAvailable:", kProcDirectory + kMeminfoFilename)) / stof(parseMultiLine("MemTotal:", kProcDirectory + kMeminfoFilename)) ;
+  return 1-(stof(parseMultiLine("MemAvailable:", kProcDirectory + kMeminfoFilename)) / stof(parseMultiLine("MemTotal:", kProcDirectory + kMeminfoFilename))) ;
  }
 
 // DONE: Read and return the system uptime
@@ -105,7 +105,7 @@ long LinuxParser::Jiffies() {
 
 // TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { return 0; }
+// long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { return 0; } // unused 
 
 // TODO: Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() { 
@@ -136,7 +136,7 @@ long LinuxParser::IdleJiffies() {
 // DONE: Read and return CPU utilization
 vector<string> LinuxParser::CpuUtilization() { 
   vector<string> cpuu;
-  string utilizated = to_string(100.0*( LinuxParser::ActiveJiffies()/ LinuxParser::Jiffies()));
+  string utilizated = to_string( LinuxParser::ActiveJiffies()/ LinuxParser::Jiffies());
   cpuu.push_back(utilizated);
   return cpuu; 
 }
@@ -273,7 +273,7 @@ float LinuxParser::CpuUtilization(int pid) {
     starttime = std::stol(statss[21]);
     total_time = std::stol(statss[13]) + std::stol(statss[14]) + std::stol(statss[15]) + std::stol(statss[16]);
     seconds = UpTime() - (starttime / sysconf(_SC_CLK_TCK));
-    utilized = 100 * (total_time / sysconf(_SC_CLK_TCK)) / seconds;
+    utilized = (total_time / sysconf(_SC_CLK_TCK))/seconds;
     return utilized;
   }
   return 0;

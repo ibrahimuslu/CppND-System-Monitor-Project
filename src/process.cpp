@@ -26,12 +26,8 @@ string Process::Ram() const { return LinuxParser::Ram(pid); }
 string Process::User() { return LinuxParser::User(pid); }
 
 // TODO: Return the age of this process (in seconds)
-long int Process::UpTime() { return LinuxParser::UpTime(pid); }
+long int Process::UpTime() { return LinuxParser::UpTime() - LinuxParser::UpTime(pid); }
 
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
-bool Process::operator < (Process const& a) const 
-{  
-  bool res =  CpuUtilization() > a.CpuUtilization(); 
-  return res; 
-}
+bool Process::operator < (Process const& a) const {  return ( CpuUtilization() < a.CpuUtilization()); }
